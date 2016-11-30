@@ -1,4 +1,4 @@
-# Main Repository Eploris Reddit app
+# Main Repository Exploring Reddit app
 
 ##Libraries Used
 
