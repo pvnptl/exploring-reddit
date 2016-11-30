@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/open">
+        <menu>
+            <item
+                android:id="@+id/nav_subreddit"
+                android:checkable="false"
+                android:icon="@drawable/ic_search"
+                android:title="@string/subreddit" />
+        </menu>
+    </item>
+    <item android:title="@string/subreddit">
+        <menu></menu>
+    </item>
+</menu>
