@@ -1,5 +1,8 @@
 # Main Repository Exploring Reddit app
 
+## Architecture
+![Image of Yaktocat](https://github.com/pvnptl/exploring-reddit/blob/master/screenshots/architecture.jpeg)
+
 ##Libraries Used
 
 ```java
