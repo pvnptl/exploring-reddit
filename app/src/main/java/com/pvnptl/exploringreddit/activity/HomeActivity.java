@@ -77,7 +77,6 @@ public class HomeActivity extends AppCompatActivity
                 mCurrentSubreddit = savedInstanceState.getString("subreddit");
             } else {
                 mCurrentSubreddit = mSubreddits[0].toLowerCase();
-                updateQuickAccessSubredditList();
                 // Create a new Fragment to be placed in the activity layout
                 mSubredditFragment = SubredditFragment.newInstance(mCurrentSubreddit);
 
