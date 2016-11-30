@@ -77,6 +77,9 @@ public class HomeActivity extends AppCompatActivity
                 mCurrentSubreddit = savedInstanceState.getString("subreddit");
             } else {
                 mCurrentSubreddit = mSubreddits[0].toLowerCase();
+                if (!ProjectUtils.isOnline(this)) {
+                    showSnackbarMessage(getString(R.string.device_offline));
+                }
                 // Create a new Fragment to be placed in the activity layout
                 mSubredditFragment = SubredditFragment.newInstance(mCurrentSubreddit);
 
@@ -135,10 +138,10 @@ public class HomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            if (ProjectUtils.isOnline(this)) {
-                replaceFragment(mCurrentSubreddit);
-            } else {
+            if (!ProjectUtils.isOnline(this)) {
                 showSnackbarMessage(getString(R.string.device_offline));
+            } else {
+                replaceFragment(mCurrentSubreddit);
             }
             return true;
         }
@@ -208,6 +211,10 @@ public class HomeActivity extends AppCompatActivity
 
     private void replaceFragment(String subredditName) {
         mCurrentSubreddit = subredditName.toLowerCase();
+
+        if (!ProjectUtils.isOnline(this)) {
+            showSnackbarMessage(getString(R.string.device_offline));
+        }
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         getSupportActionBar().setTitle(mCurrentSubreddit);
