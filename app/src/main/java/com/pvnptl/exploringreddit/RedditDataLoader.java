@@ -60,6 +60,7 @@ public class RedditDataLoader {
                     final Thing<Listing<List<Thing<Link>>>> body = response.body();
 
                     if (body.data.children.isEmpty()) {
+                        mCallInterface.onFailure("Not found");
                         return;
                     }
 
