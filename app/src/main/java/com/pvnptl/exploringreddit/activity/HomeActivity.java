@@ -212,6 +212,8 @@ public class HomeActivity extends AppCompatActivity
     private void replaceFragment(String subredditName) {
         mCurrentSubreddit = subredditName.toLowerCase();
 
+        dismissSnackbar();
+
         if (!ProjectUtils.isOnline(this)) {
             showSnackbarMessage(getString(R.string.device_offline));
         }
