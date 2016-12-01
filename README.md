@@ -3,6 +3,9 @@
 ## Architecture
 ![Architecture](https://github.com/pvnptl/exploring-reddit/blob/master/screenshots/architecture.jpeg)
 
+## Demo
+![Demo](https://github.com/pvnptl/exploring-reddit/blob/master/screenshots/exploring-reddit-demo.gif)
+
 ##Libraries Used
 
 ```java
