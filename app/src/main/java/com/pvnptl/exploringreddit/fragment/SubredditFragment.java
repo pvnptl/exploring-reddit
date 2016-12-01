@@ -179,14 +179,19 @@ public class SubredditFragment extends RealmBaseFragment
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onStart() {
+        super.onStart();
         try {
             mListener = (OnFragmentInteractionListener) getContext();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
