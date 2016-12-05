@@ -2,9 +2,7 @@ package com.pvnptl.exploringreddit.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.pvnptl.exploringreddit.ProjectUtils;
 import com.pvnptl.exploringreddit.R;
@@ -53,9 +51,12 @@ public class HomeActivity extends AppCompatActivity
     private Fragment mSubredditFragment;
     private Snackbar mSnackbar;
 
+    private boolean isRestoringState = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("pvn", "onCreate");
         setContentView(R.layout.activity_home);
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,6 +75,7 @@ public class HomeActivity extends AppCompatActivity
         if (ButterKnife.findById(this, R.id.fragment_container) != null) {
 
             if (savedInstanceState != null) {
+                isRestoringState = true;
                 mCurrentSubreddit = savedInstanceState.getString("subreddit");
             } else {
                 mCurrentSubreddit = mSubreddits[0].toLowerCase();
@@ -95,6 +97,23 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // When activity is launched from notification click in Accessibility service
+        Intent intent = getIntent();
+        String extra;
+        if (intent != null) {
+            extra = intent.getStringExtra("subredditname");
+            if (extra != null) {
+                mCurrentSubreddit = extra;
+                replaceFragment(mCurrentSubreddit);
+                setNavMenuItemSelection();
+            }
+            setIntent(null);
+        }
+    }
+
     private void updateQuickAccessSubredditList() {
         NavigationView navigationView = ButterKnife.findById(this, R.id.nav_view);
         Menu menu = navigationView.getMenu();
@@ -110,6 +129,30 @@ public class HomeActivity extends AppCompatActivity
                 mPreviousMenuItem = submenuItem;
             }
         }
+    }
+
+    private void setNavMenuItemSelection() {
+        NavigationView navigationView = ButterKnife.findById(this, R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        MenuItem submenuItem = menu.getItem(1);
+        SubMenu submenu = submenuItem.getSubMenu();
+        for (int i = 0; i < submenu.size(); i++) {
+            if (mCurrentSubreddit.equalsIgnoreCase(submenu.getItem(i).getTitle().toString())) {
+                submenuItem = submenu.getItem(i);
+                submenuItem.setChecked(true);
+                submenuItem.setCheckable(true);
+                if (mPreviousMenuItem != null) {
+                    mPreviousMenuItem.setChecked(false);
+                }
+                mPreviousMenuItem = submenuItem;
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     @Override

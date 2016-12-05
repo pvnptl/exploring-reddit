@@ -32,7 +32,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import io.realm.Case;
 import io.realm.Realm;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
