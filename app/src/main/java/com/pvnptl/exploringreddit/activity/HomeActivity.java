@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.pvnptl.exploringreddit.ProjectUtils;
 import com.pvnptl.exploringreddit.R;
@@ -32,6 +33,12 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SubredditFragment.OnFragmentInteractionListener {
+
+    private static final String ACTION_NOTIFICATION = "android.intent.action.NOTIFICATION";
+    private static final String ACTION_SEARCH_SUBREDDIT = "android.intent.action.SHORTCUT_SUBREDDIT";
+    private static final String ACTION_AWW = "android.intent.action.SHORTCUT_AWW";
+    private static final String ACTION_CATS = "android.intent.action.SHORTCUT_CATS";
+    private static final String ACTION_PICS = "android.intent.action.SHORTCUT_PICS";
 
     String[] mSubreddits = new String[]{
             "Frontpage",
@@ -50,8 +57,6 @@ public class HomeActivity extends AppCompatActivity
     private MenuItem mPreviousMenuItem;
     private Fragment mSubredditFragment;
     private Snackbar mSnackbar;
-
-    private boolean isRestoringState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +80,6 @@ public class HomeActivity extends AppCompatActivity
         if (ButterKnife.findById(this, R.id.fragment_container) != null) {
 
             if (savedInstanceState != null) {
-                isRestoringState = true;
                 mCurrentSubreddit = savedInstanceState.getString("subreddit");
             } else {
                 mCurrentSubreddit = mSubreddits[0].toLowerCase();
@@ -100,13 +104,28 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // When activity is launched from notification click in Accessibility service
+        // When activity is launched from notification or app shortcuts click in Accessibility service
         Intent intent = getIntent();
-        String extra;
+
         if (intent != null) {
-            extra = intent.getStringExtra("subredditname");
-            if (extra != null) {
-                mCurrentSubreddit = extra;
+            if (ACTION_NOTIFICATION.equals(intent.getAction())) {
+                String extra = intent.getStringExtra("subredditname");
+                // Default to r/frontpage
+                mCurrentSubreddit = extra != null ? extra : mSubreddits[0];
+                replaceFragment(mCurrentSubreddit);
+                setNavMenuItemSelection();
+            } else if (ACTION_SEARCH_SUBREDDIT.equals(intent.getAction())) {
+                showSubredditInputDialog();
+            } else if (ACTION_AWW.equals(intent.getAction())) {
+                mCurrentSubreddit = "aww";
+                replaceFragment(mCurrentSubreddit);
+                setNavMenuItemSelection();
+            } else if (ACTION_CATS.equals(intent.getAction())) {
+                mCurrentSubreddit = "cats";
+                replaceFragment(mCurrentSubreddit);
+                setNavMenuItemSelection();
+            } else if (ACTION_PICS.equals(intent.getAction())) {
+                mCurrentSubreddit = "pics";
                 replaceFragment(mCurrentSubreddit);
                 setNavMenuItemSelection();
             }
@@ -206,43 +225,7 @@ public class HomeActivity extends AppCompatActivity
         item.setChecked(true);
 
         if (id == R.id.nav_subreddit) {
-            final AlertDialog subredditInputDialog = new AlertDialog.Builder(this)
-                    .setTitle(R.string.view_subreddit)
-                    .setView(R.layout.layout_subreddit_input)
-                    .setPositiveButton(getString(R.string.view), null)
-                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create();
-            subredditInputDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            subredditInputDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-                @Override
-                public void onShow(final DialogInterface dialog) {
-
-                    ProjectUtils.showSoftKeyboard(ButterKnife.findById((AlertDialog) dialog, R.id.cancelled_reason_editText));
-
-                    Button doneButton = subredditInputDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                    doneButton.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-                            EditText subredditNameEditText = ButterKnife.findById((AlertDialog) dialog, R.id.cancelled_reason_editText);
-                            if (TextUtils.isEmpty(subredditNameEditText.getText())) {
-                                subredditNameEditText.setError(getString(R.string.enter_a_subreddit));
-                            } else {
-                                ProjectUtils.hideSoftKeyboard(subredditNameEditText);
-                                dialog.dismiss();
-                                replaceFragment(subredditNameEditText.getText().toString());
-                            }
-                        }
-                    });
-                }
-            });
-            subredditInputDialog.show();
+            showSubredditInputDialog();
         } else {
             // Menu item name is same as subreddit name
             replaceFragment(item.getTitle().toString());
@@ -250,6 +233,46 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showSubredditInputDialog() {
+        final AlertDialog subredditInputDialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.view_subreddit)
+                .setView(R.layout.layout_subreddit_input)
+                .setPositiveButton(getString(R.string.view), null)
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        subredditInputDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        subredditInputDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+
+                ProjectUtils.showSoftKeyboard(ButterKnife.findById((AlertDialog) dialog, R.id.cancelled_reason_editText));
+
+                Button doneButton = subredditInputDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                doneButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        EditText subredditNameEditText = ButterKnife.findById((AlertDialog) dialog, R.id.cancelled_reason_editText);
+                        if (TextUtils.isEmpty(subredditNameEditText.getText())) {
+                            subredditNameEditText.setError(getString(R.string.enter_a_subreddit));
+                        } else {
+                            ProjectUtils.hideSoftKeyboard(subredditNameEditText);
+                            dialog.dismiss();
+                            replaceFragment(subredditNameEditText.getText().toString());
+                        }
+                    }
+                });
+            }
+        });
+        subredditInputDialog.show();
     }
 
     private void replaceFragment(String subredditName) {
