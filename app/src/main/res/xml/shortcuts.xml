@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message"
+        android:shortcutId="search"
+        android:shortcutLongLabel="@string/subreddit_shortcut_long_label"
+        android:shortcutShortLabel="@string/subreddit_shortcut_short_label">
+        <intent
+            android:action="android.intent.action.SHORTCUT_SUBREDDIT"
+            android:targetClass="com.pvnptl.exploringreddit.activity.HomeActivity"
+            android:targetPackage="com.pvnptl.exploringreddit" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message"
+        android:shortcutId="aww"
+        android:shortcutLongLabel="@string/aww_shortcut_short_label"
+        android:shortcutShortLabel="@string/aww_shortcut_short_label">
+        <intent
+            android:action="android.intent.action.SHORTCUT_AWW"
+            android:targetClass="com.pvnptl.exploringreddit.activity.HomeActivity"
+            android:targetPackage="com.pvnptl.exploringreddit" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message"
+        android:shortcutId="cats"
+        android:shortcutLongLabel="@string/cats_shortcut_short_label"
+        android:shortcutShortLabel="@string/cats_shortcut_short_label">
+        <intent
+            android:action="android.intent.action.SHORTCUT_CATS"
+            android:targetClass="com.pvnptl.exploringreddit.activity.HomeActivity"
+            android:targetPackage="com.pvnptl.exploringreddit" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:shortcutDisabledMessage="@string/shortcut_disabled_message"
+        android:shortcutId="pics"
+        android:shortcutLongLabel="@string/pics_shortcut_short_label"
+        android:shortcutShortLabel="@string/pics_shortcut_short_label">
+        <intent
+            android:action="android.intent.action.SHORTCUT_PICS"
+            android:targetClass="com.pvnptl.exploringreddit.activity.HomeActivity"
+            android:targetPackage="com.pvnptl.exploringreddit" />
+    </shortcut>
+
+</shortcuts>
+
+

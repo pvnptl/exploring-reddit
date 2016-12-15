@@ -17,5 +17,11 @@
     <string name="private_sub">Private sub</string>
     <string name="sub_does_not_exist">Sub does not exist</string>
     <string name="no_more_posts">This sub has no more posts</string>
+    <string name="subreddit_shortcut_short_label">subreddit</string>
+    <string name="subreddit_shortcut_long_label">Open subreddit</string>
+    <string name="shortcut_disabled_message">Disabled</string>
+    <string name="aww_shortcut_short_label">r/aww</string>
+    <string name="pics_shortcut_short_label">r/pics</string>
+    <string name="cats_shortcut_short_label">r/cats</string>
 
 </resources>
